@@ -4,6 +4,7 @@ import { LikeEntity } from '../../likes/domain/likes.entity';
 import { UserScoreEntity } from '../../quiz/domain/user-score.entity';
 import {BlogEntity} from "../../blogs/domain/blogs.entity";
 import {PostEntity} from "../../posts/domain/posts.entity";
+import { BanInfoEntity } from './ban-info.entity';
 
 
 @Entity('users')
@@ -20,6 +21,9 @@ export class UserEntity {
 
   @Column()
   password: string
+
+  @OneToOne(() => BanInfoEntity, (banInfo) => banInfo.user, {cascade: true})
+  banInfo: BanInfoEntity;
 
   @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
   createdAt: string
