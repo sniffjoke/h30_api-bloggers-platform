@@ -11,10 +11,11 @@ import { UsersRepositoryTO } from './infrastructure/users.repository.to';
 import { UsersQueryRepositoryTO } from './infrastructure/users.query-repositories.to';
 import { TokensModule } from '../tokens/tokens.module';
 import { UserScoreEntity } from '../quiz/domain/user-score.entity';
+import { BanInfoEntity } from './domain/ban-info.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, EmailConfirmationEntity, UserScoreEntity]),
+    TypeOrmModule.forFeature([UserEntity, EmailConfirmationEntity, UserScoreEntity, BanInfoEntity]),
     CryptoModule,
     UuidModule,
     TokensModule

@@ -5,6 +5,7 @@ import { CreateUserDto, EmailConfirmationModel } from '../api/models/input/creat
 import { UserEntity } from '../domain/user.entity';
 import { EmailConfirmationEntity } from '../domain/email-confirmation.entity';
 import { UserScoreEntity } from '../../quiz/domain/user-score.entity';
+import { BanInfoEntity } from '../domain/ban-info.entity';
 
 
 @Injectable()
@@ -28,12 +29,16 @@ export class UsersRepositoryTO {
     emailConfirmation.expirationDate = emailConfirmationDto.expirationDate as string;
     emailConfirmation.isConfirm = emailConfirmationDto.isConfirm;
 
+    const banInfo = new BanInfoEntity();
+    banInfo.userId = newUser.id;
+
     const userScore = new UserScoreEntity()
     userScore.userId = newUser.id;
 
     newUser.score = userScore;
 
     await this.uRepository.manager.save(emailConfirmation);
+    await this.uRepository.manager.save(banInfo);
     await this.uRepository.save(newUser);
     return newUser;
   }
