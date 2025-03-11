@@ -3,6 +3,7 @@ import { initSettings } from '../helpers/init-settings';
 import { deleteAllData } from '../helpers/delete-all-data';
 import { UsersService } from '../../src/features/users/application/users.service';
 import { createMockUser, UsersTestManager } from '../helpers/users-test-helpers';
+import { BanUserDto } from '../../src/features/users/api/models/input/ban-user.dto';
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
@@ -34,6 +35,10 @@ describe('UsersController (e2e)', () => {
       expect(user.body).toHaveProperty('login');
       expect(user.body).toHaveProperty('email');
       expect(user.body).toHaveProperty('createdAt');
+      expect(user.body).toHaveProperty('banInfo');
+      expect(user.body.banInfo).toHaveProperty('isBanned');
+      expect(user.body.banInfo).toHaveProperty('banDate');
+      expect(user.body.banInfo).toHaveProperty('banReason');
       expect(new Date(user.body.createdAt).toISOString()).toContain('T');
       expect(user.body.createdAt).toBeDefined();
       expect(user.body).toEqual(
@@ -88,6 +93,21 @@ describe('UsersController (e2e)', () => {
       const users = await usersManager.getUsersWithSA();
       expect(response.status).toBe(204);
       expect(users.body.items.length).toBeLessThan(1);
+    });
+
+    it('/sa/users/:userId/ban (PUT)', async () => {
+      const emailConfirmation = usersService.createEmailConfirmation(true);
+      const user = await usersManager.createUser(createMockUser(15), emailConfirmation);
+      const banUserData: BanUserDto = {
+        isBanned: true,
+        banReason: 'ban',
+      }
+      const response = await usersManager.banUser(user.body.id, banUserData);
+      const users = await usersManager.getUsersWithSA();
+      expect(response.status).toBe(204);
+      console.log('userBefore: ', user.body);
+      console.log('userAfter: ', users.body.items[0]);
+      // expect(users.body.items.length).toBeLessThan(1);
     });
   });
 

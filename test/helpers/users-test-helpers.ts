@@ -4,6 +4,7 @@ import { ConfigurationType } from '../../src/core/settings/env/configuration';
 import { CreateUserDto, EmailConfirmationModel } from '../../src/features/users/api/models/input/create-user.dto';
 import request from 'supertest';
 import { codeAuth } from './test-helpers';
+import { BanUserDto } from '../../src/features/users/api/models/input/ban-user.dto';
 
 export class UsersTestManager {
   constructor(
@@ -42,6 +43,15 @@ export class UsersTestManager {
       .delete('/sa/users/' + `${userId}`)
       .set({ 'Authorization': `Basic ` + codeAuth(apiSettings.ADMIN) })
     return response
+  }
+
+  async banUser(userId: string, banUserData: BanUserDto) {
+    const apiSettings = this.configService.get('apiSettings', { infer: true });
+    const response = await request(this.app.getHttpServer())
+      .put(`/sa/users/${userId}/ban`)
+      .set({ 'Authorization': `Basic ` + codeAuth(apiSettings.ADMIN) })
+      .send(banUserData);
+    return response;
   }
 }
 

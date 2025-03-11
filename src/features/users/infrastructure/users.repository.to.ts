@@ -45,7 +45,10 @@ export class UsersRepositoryTO {
 
   async findUserById(id: string) {
     const findedUser = await this.uRepository.findOne(
-      { where: { id } },
+      {
+        where: { id },
+        relations: ['banInfo'],
+      },
     );
     if (!findedUser) {
       throw new NotFoundException('User not found');
@@ -152,6 +155,10 @@ export class UsersRepositoryTO {
       throw new BadRequestException('User profile not found')
     }
     return findedEmailInfo;
+  }
+
+  async saveUser(user: UserEntity) {
+    return await this.uRepository.save(user)
   }
 
 }

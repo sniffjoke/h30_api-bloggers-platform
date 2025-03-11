@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, ILike, Or, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ILike, Or, Repository } from 'typeorm';
 import { PaginationBaseModel } from '../../../core/base/pagination.base.model';
 import { UserEntity } from '../domain/user.entity';
 
@@ -14,7 +14,10 @@ export class UsersQueryRepositoryTO {
 
   async userOutput(id: string) {
     const findedUser = await this.uRepository.findOne(
-      { where: { id } },
+      {
+        where: { id },
+        relations: ['banInfo'],
+      },
     );
     if (!findedUser) {
       throw new NotFoundException('User not found');
@@ -23,12 +26,14 @@ export class UsersQueryRepositoryTO {
   }
 
   userMap(user: UserEntity) {
-    const { email, login, createdAt, id } = user;
+    const { email, login, createdAt, id, banInfo } = user;
+    const { userId, ...banInfoWithoutUserId } = banInfo;
     return {
       id: id.toString(),
       login,
       email,
       createdAt,
+      banInfo: banInfoWithoutUserId,
     };
   }
 
@@ -40,6 +45,7 @@ export class UsersQueryRepositoryTO {
           { email: Or(ILike(`${generateQuery.searchEmailTerm}`)) },
           { login: Or(ILike(`${generateQuery.searchLoginTerm}`)) },
         ],
+        relations: ['banInfo'],
         order: {
           [generateQuery.sortBy]: generateQuery.sortDirection,
         },
