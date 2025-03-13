@@ -45,8 +45,9 @@ export class UserEntity {
   @OneToMany(() => PostEntity, (post) => post.user, { cascade: true })
   posts: PostEntity[];
 
-  banUser(user: UserEntity, banReasonModel: BanUserDto) {
-    user.banInfo.banDate = new Date(Date.now()).toISOString();
+  banUser(user: UserEntity, banReasonModel: BanUserDto, banDate: string | null) {
+    // user.banInfo.banDate = new Date(Date.now()).toISOString();
+    user.banInfo.banDate = banDate;
     user.banInfo.banReason = banReasonModel.banReason
     user.banInfo.isBanned = banReasonModel.isBanned
   }

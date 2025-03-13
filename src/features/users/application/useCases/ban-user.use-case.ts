@@ -22,7 +22,8 @@ export class BanUserUseCase
 
   async execute(command: BanUserCommand) {
     const findedUser = await this.usersRepository.findUserById(command.userId);
-    findedUser.banUser(findedUser, command.banUserModel)
+    const banDate = command.banUserModel.isBanned ? new Date(Date.now()).toISOString() : null
+    findedUser.banUser(findedUser, command.banUserModel, banDate);
     return await this.usersRepository.saveUser(findedUser);
   }
 }

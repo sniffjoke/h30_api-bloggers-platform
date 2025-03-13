@@ -12,7 +12,7 @@ export class BanInfoEntity {
   isBanned: boolean;
 
   @Column({nullable: true})
-  banDate: string
+  banDate: string | null
 
   @Column({nullable: true})
   banReason: string
