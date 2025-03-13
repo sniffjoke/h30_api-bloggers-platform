@@ -11,8 +11,8 @@ export class BanInfoEntity {
   @Column({default: false})
   isBanned: boolean;
 
-  @Column({nullable: true})
-  banDate: string | null
+  @Column({type: 'timestamp', nullable: true})
+  banDate: string | null;
 
   @Column({nullable: true})
   banReason: string
