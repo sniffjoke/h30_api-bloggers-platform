@@ -14,8 +14,8 @@ export class BanInfoEntity {
   @Column({type: 'timestamp', nullable: true})
   banDate: string | null;
 
-  @Column({nullable: true})
-  banReason: string
+  @Column({type: 'text', nullable: true})
+  banReason: string | null;
 
   @OneToOne(() => UserEntity, {onDelete: 'CASCADE'})
   @JoinColumn({name: 'userId'})

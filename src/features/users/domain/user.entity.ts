@@ -5,7 +5,7 @@ import { UserScoreEntity } from '../../quiz/domain/user-score.entity';
 import {BlogEntity} from "../../blogs/domain/blogs.entity";
 import {PostEntity} from "../../posts/domain/posts.entity";
 import { BanInfoEntity } from './ban-info.entity';
-import { BanUserDto } from '../api/models/input/ban-user.dto';
+import { BanInfoDto, BanUserDto } from '../api/models/input/ban-user.dto';
 
 
 @Entity('users')
@@ -45,11 +45,10 @@ export class UserEntity {
   @OneToMany(() => PostEntity, (post) => post.user, { cascade: true })
   posts: PostEntity[];
 
-  banUser(user: UserEntity, banReasonModel: BanUserDto, banDate: string | null) {
-    // user.banInfo.banDate = new Date(Date.now()).toISOString();
-    user.banInfo.banDate = banDate;
-    user.banInfo.banReason = banReasonModel.banReason
-    user.banInfo.isBanned = banReasonModel.isBanned
+  banUser(user: UserEntity, banModel: BanInfoDto) {
+    user.banInfo.banDate = banModel.banDate;
+    user.banInfo.banReason = banModel.banReason
+    user.banInfo.isBanned = banModel.isBanned
   }
 
 }

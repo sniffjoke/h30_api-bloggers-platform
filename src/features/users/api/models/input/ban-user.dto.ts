@@ -5,5 +5,9 @@
 
 export class BanUserDto {
   isBanned: boolean;
-  banReason: string
+  banReason: string | null;
+}
+
+export class BanInfoDto extends BanUserDto {
+  banDate: string | null;
 }
