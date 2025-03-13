@@ -105,8 +105,14 @@ describe('UsersController (e2e)', () => {
       const response = await usersManager.banUser(user.body.id, banUserData);
       const users = await usersManager.getUsersWithSA();
       expect(response.status).toBe(204);
+      const response2 = await usersManager.banUser(user.body.id, {
+        isBanned: false,
+        banReason: 'ban',
+      });
+      const users2 = await usersManager.getUsersWithSA();
       console.log('userBefore: ', user.body);
       console.log('userAfter: ', users.body.items[0]);
+      console.log('userAfterUnban: ', users2.body.items[0]);
       // expect(users.body.items.length).toBeLessThan(1);
     });
   });
