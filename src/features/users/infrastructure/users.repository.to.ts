@@ -96,7 +96,7 @@ export class UsersRepositoryTO {
     const findedUser = await this.uRepository.findOne(
       { where: { login } },
     );
-    if (!findedUser) {
+    if (!findedUser || findedUser?.banInfo.isBanned) {
       throw new UnauthorizedException('User not found');
     }
     return findedUser;
