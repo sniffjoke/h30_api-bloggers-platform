@@ -99,6 +99,7 @@ export class UsersRepositoryTO {
     if (!findedUser || findedUser?.banInfo.isBanned) {
       throw new UnauthorizedException('User not found');
     }
+
     return findedUser;
   }
 
