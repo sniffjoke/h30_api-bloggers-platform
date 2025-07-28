@@ -49,8 +49,6 @@ export class UserEntity {
     user.banInfo.banDate = banModel.banDate;
     user.banInfo.banReason = banModel.banReason
     user.banInfo.isBanned = banModel.isBanned
-    user.comments = []
-    user.likes = []
   }
 
 }

@@ -12,10 +12,12 @@ import { UsersQueryRepositoryTO } from './infrastructure/users.query-repositorie
 import { TokensModule } from '../tokens/tokens.module';
 import { UserScoreEntity } from '../quiz/domain/user-score.entity';
 import { BanInfoEntity } from './domain/ban-info.entity';
+import { CommentsRepositoryTO } from '../comments/infrastructure/comments.repository.to';
+import { CommentEntity } from '../comments/domain/comment.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, EmailConfirmationEntity, UserScoreEntity, BanInfoEntity]),
+    TypeOrmModule.forFeature([UserEntity, EmailConfirmationEntity, UserScoreEntity, BanInfoEntity, CommentEntity]),
     CryptoModule,
     UuidModule,
     TokensModule
@@ -25,6 +27,7 @@ import { BanInfoEntity } from './domain/ban-info.entity';
     UsersService,
     UsersRepositoryTO,
     UsersQueryRepositoryTO,
+    CommentsRepositoryTO,
     ...UsersCommandHandlers,
   ],
   exports: [
@@ -33,6 +36,7 @@ import { BanInfoEntity } from './domain/ban-info.entity';
     UsersService,
     UsersRepositoryTO,
     UsersQueryRepositoryTO,
+    CommentsRepositoryTO,
     ...UsersCommandHandlers,
   ],
 })

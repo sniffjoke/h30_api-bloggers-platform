@@ -4,7 +4,7 @@
 // export class UpdateUserDto extends PartialType(CreateUserDto) {}
 
 export class BanUserDto {
-  isBanned: boolean;
+    isBanned: boolean;
   banReason: string | null;
 }
 

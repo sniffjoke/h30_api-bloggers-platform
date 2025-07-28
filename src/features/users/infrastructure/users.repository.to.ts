@@ -59,7 +59,7 @@ export class UsersRepositoryTO {
   async findUserById(id: string) {
     const findedUser = await this.uRepository.findOne({
       where: { id },
-      relations: ['banInfo'],
+      relations: ['banInfo', 'comments', 'likes'],
     });
     if (!findedUser) {
       throw new NotFoundException('User not found');
@@ -110,7 +110,6 @@ export class UsersRepositoryTO {
       where: { login },
       relations: ['banInfo', 'comments', 'likes'],
     });
-    console.log(findedUser?.likes);
     if (!findedUser || findedUser?.banInfo.isBanned) {
       throw new UnauthorizedException('User not found');
     }

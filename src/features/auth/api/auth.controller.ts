@@ -17,7 +17,7 @@ import { GetMeCommand } from '../application/useCases/get-me.use-case';
 import { RefreshTokenCommand } from '../application/useCases/refresh-token.use-case';
 import { LogoutCommand } from '../application/useCases/logout.use-case';
 import { UsersQueryRepositoryTO } from '../../users/infrastructure/users.query-repositories.to';
-import { LocalAuthGuard } from '../../../core/guards/local-auth.guard';
+// import { LocalAuthGuard } from '../../../core/guards/local-auth.guard';
 
 
 @Controller('auth')
@@ -35,7 +35,7 @@ export class AuthController {
     return userData;
   }
 
-  @UseGuards(LocalAuthGuard)
+  // @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(200)
   // @UseGuards(ThrottlerGuard)
