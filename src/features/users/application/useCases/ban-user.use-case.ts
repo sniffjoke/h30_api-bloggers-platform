@@ -18,7 +18,7 @@ export class BanUserUseCase implements ICommandHandler<BanUserCommand> {
   ) {}
 
   async execute(command: BanUserCommand) {
-    console.log('BanUserCommand: ', command);
+    // console.log('BanUserCommand: ', command);
     const findedUser = await this.usersRepository.findUserById(command.userId);
     const banDate = command.banUserModel.isBanned
       ? new Date(Date.now()).toISOString()
@@ -39,11 +39,11 @@ export class BanUserUseCase implements ICommandHandler<BanUserCommand> {
     //     this.commentsRepository.deleteComment(item.id),
     //   ),
     // );
-    await this.usersRepository.saveUser(findedUser);
-    return await Promise.all(
-      findedUser.comments.map(async (item) =>
-        this.commentsRepository.deleteComment(item.id),
-      ),
-    );
+    return await this.usersRepository.saveUser(findedUser);
+    // return await Promise.all(
+    //   findedUser.comments.map(async (item) =>
+    //     this.commentsRepository.deleteComment(item.id),
+    //   ),
+    // );
   }
 }

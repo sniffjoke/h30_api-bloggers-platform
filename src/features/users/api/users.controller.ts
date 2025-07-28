@@ -48,9 +48,9 @@ export class UsersController {
   }
 
   @Put('users/:id/ban')
-  @HttpCode(204)
+  @HttpCode(200)
   @UseGuards(BasicAuthGuard)
   async banUser(@Param('id') id: string, @Body() banUserDto: BanUserDto) {
-    return await this.commandBus.execute(new BanUserCommand(id, banUserDto));
+    await this.commandBus.execute(new BanUserCommand(id, banUserDto));
   }
 }

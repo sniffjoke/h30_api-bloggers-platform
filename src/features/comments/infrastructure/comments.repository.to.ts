@@ -33,10 +33,11 @@ export class CommentsRepositoryTO {
   async findCommentById(id: string) {
     const findedComment = await this.cRepository.findOne({
         where: { id },
-      relations: ['user', 'likesInfo']
+      relations: ['user', 'likesInfo', 'user.banInfo']
       },
     );
-    if (!findedComment) {
+    console.log('commentInfo: ', findedComment?.user.banInfo.isBanned);
+    if (!findedComment || findedComment.user.banInfo.isBanned) {
       throw new NotFoundException(`Comment with id ${id} not found`);
     }
     return findedComment;
