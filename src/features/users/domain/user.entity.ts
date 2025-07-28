@@ -5,7 +5,7 @@ import { UserScoreEntity } from '../../quiz/domain/user-score.entity';
 import {BlogEntity} from "../../blogs/domain/blogs.entity";
 import {PostEntity} from "../../posts/domain/posts.entity";
 import { BanInfoEntity } from './ban-info.entity';
-import { BanInfoDto, BanUserDto } from '../api/models/input/ban-user.dto';
+import { BanInfoDto } from '../api/models/input/ban-user.dto';
 
 
 @Entity('users')
@@ -49,6 +49,8 @@ export class UserEntity {
     user.banInfo.banDate = banModel.banDate;
     user.banInfo.banReason = banModel.banReason
     user.banInfo.isBanned = banModel.isBanned
+    user.comments = []
+    user.likes = []
   }
 
 }

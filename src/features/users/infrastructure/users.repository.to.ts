@@ -108,8 +108,9 @@ export class UsersRepositoryTO {
   async findUserByLogin(login: string) {
     const findedUser = await this.uRepository.findOne({
       where: { login },
-      relations: ['banInfo'],
+      relations: ['banInfo', 'comments', 'likes'],
     });
+    console.log(findedUser?.likes);
     if (!findedUser || findedUser?.banInfo.isBanned) {
       throw new UnauthorizedException('User not found');
     }
