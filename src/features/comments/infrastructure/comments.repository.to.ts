@@ -50,8 +50,18 @@ export class CommentsRepositoryTO {
 
   async deleteComment(commentId: string) {
     const findedComment = await this.findCommentById(commentId);
+    // console.log('findedComment: ', findedComment);
+    // console.log('commentId: ', commentId);
     const deleteComment = await this.cRepository.delete(
       { id: commentId },
+    );
+    // console.log(2);
+    return deleteComment;
+  }
+
+  async deleteCommentsByUser(userId: string) {
+    const deleteComment = await this.cRepository.delete(
+      {userId}
     );
     return deleteComment;
   }
