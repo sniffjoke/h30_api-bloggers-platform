@@ -107,7 +107,6 @@ export class PostsQueryRepositoryTO {
     }
 
     async postOutput(postId: string) {
-        console.log('id: ', postId)
         const findedPost = await this.pRepository
             .createQueryBuilder('p')
             .leftJoin('extendedLikesInfo', 'e', 'e."postId" = p."id"')
@@ -127,7 +126,6 @@ export class PostsQueryRepositoryTO {
             ])
             .where('p.id = :id', {id: postId})
             .getRawOne();
-        console.log(findedPost)
         if (!findedPost) {
             throw new NotFoundException(`Post with id ${postId} not found`);
         }

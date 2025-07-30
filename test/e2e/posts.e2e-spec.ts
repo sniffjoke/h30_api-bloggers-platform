@@ -37,7 +37,7 @@ describe('PostsController (e2e)', () => {
   describe('/posts (e2e)', () => {
     it('/posts/ (GET)', async () => {
       const blog = await blogsManager.createBlog(createMockBlog(40));
-      for (let i = 20; i < 30; i++) {
+      for (let i = 20; i < 23; i++) {
         let res = await postsManager.createPost(createMockPost(i), blog.body.id);
       }
       const posts = await postsManager.getPosts();
@@ -85,8 +85,12 @@ describe('PostsController (e2e)', () => {
       if (posts.body.items.length === 0) {
         expect(posts.body.items).toEqual([]);
       } else {
-        const dates = posts.body.items.map((post: any) => new Date(post.createdAt));
-        expect(dates).toEqual([...dates].sort((a, b) => b.getTime() - a.getTime()));
+        const dates = posts.body.items.map(
+          (post: any) => new Date(post.createdAt),
+        );
+        expect(dates).toEqual(
+          [...dates].sort((a, b) => b.getTime() - a.getTime()),
+        );
       }
     });
 

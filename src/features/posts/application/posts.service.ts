@@ -73,6 +73,7 @@ export class PostsService {
     const likeDetailsMap = await Promise.all(
       likeDetails.map(async (like: any) => {
         const user = await this.usersRepository.findUserById(like.userId);
+        console.log(1)
         return {
           addedAt: like.addedAt,
           userId: like.userId.toString(),

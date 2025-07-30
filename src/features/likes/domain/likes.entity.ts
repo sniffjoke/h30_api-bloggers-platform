@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { PostEntity } from '../../posts/domain/posts.entity';
 import { LikeStatus } from '../../posts/api/models/output/post.view.model';
 import { CommentEntity } from '../../comments/domain/comment.entity';
@@ -25,6 +25,9 @@ export class LikeEntity {
 
     @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     addedAt: string;
+
+    @Column({type: 'boolean', default: false})
+    hyde: boolean;
 
     @ManyToOne(() => PostEntity, (post) => post.likes, { onDelete: 'SET NULL' })
     @JoinColumn({name: 'postId'})

@@ -16,6 +16,7 @@ import { MailSendModule } from './core/settings/mailer.module';
 import configuration, { validate } from './core/settings/env/configuration';
 import { QuizModule } from './features/quiz/quiz.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { LikesModule } from './features/likes/likes.module';
 
 @Module({
   imports: [
@@ -45,7 +46,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     AuthModule,
     TokensModule,
     DevicesModule,
-    QuizModule
+    QuizModule,
+    LikesModule
   ],
   controllers: [],
   providers: [

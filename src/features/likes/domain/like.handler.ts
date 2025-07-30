@@ -31,7 +31,7 @@ export class LikeHandler {
       });
     // Пессимистическая блокировка
     if (findedLike) {
-      console.log('statusBefore: ', findedLike.status);
+      // console.log('statusBefore: ', findedLike.status);
       if (findedLike.status === likeStatus) {
         const updateLikeStatus = null;
       } else {

@@ -12,22 +12,22 @@ import { UsersQueryRepositoryTO } from './infrastructure/users.query-repositorie
 import { TokensModule } from '../tokens/tokens.module';
 import { UserScoreEntity } from '../quiz/domain/user-score.entity';
 import { BanInfoEntity } from './domain/ban-info.entity';
-import { CommentsRepositoryTO } from '../comments/infrastructure/comments.repository.to';
-import { CommentEntity } from '../comments/domain/comment.entity';
+import { LikeEntity } from '../likes/domain/likes.entity';
+import { LikesModule } from '../likes/likes.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, EmailConfirmationEntity, UserScoreEntity, BanInfoEntity, CommentEntity]),
+    TypeOrmModule.forFeature([UserEntity, EmailConfirmationEntity, UserScoreEntity, BanInfoEntity, LikeEntity]),
     CryptoModule,
     UuidModule,
-    TokensModule
+    TokensModule,
+    LikesModule
   ],
   controllers: [UsersController],
   providers: [
     UsersService,
     UsersRepositoryTO,
     UsersQueryRepositoryTO,
-    CommentsRepositoryTO,
     ...UsersCommandHandlers,
   ],
   exports: [
@@ -36,7 +36,6 @@ import { CommentEntity } from '../comments/domain/comment.entity';
     UsersService,
     UsersRepositoryTO,
     UsersQueryRepositoryTO,
-    CommentsRepositoryTO,
     ...UsersCommandHandlers,
   ],
 })

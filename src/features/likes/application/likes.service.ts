@@ -1,29 +1,39 @@
-import { Injectable} from '@nestjs/common';
-import { TokensService } from '../../tokens/application/tokens.service';
-import { UsersRepositoryTO } from '../../users/infrastructure/users.repository.to';
-import { CommentsRepositoryTO } from '../../comments/infrastructure/comments.repository.to';
+import { Injectable } from '@nestjs/common';
+import { PostsRepositoryTO } from '../../posts/infrastructure/posts.repository.to';
+import { LikesRepository } from '../infrastructure/likes.repository';
 
 @Injectable()
 export class LikesService {
   constructor(
-    private readonly tokensService: TokensService,
-    private readonly usersRepository: UsersRepositoryTO,
-    private readonly commentsRepository: CommentsRepositoryTO,
-  ) {
+    private readonly postsRepository: PostsRepositoryTO,
+    private readonly likesRepository: LikesRepository,
+  ) {}
+
+  async reCalculateLikesInfoForUserWithPosts(userId: string) {
+    const posts = await this.postsRepository.getAllPosts();
+    const likes = await Promise.all(
+      posts.map(async (post) => {
+        const likesCount = await this.likesRepository.getLikesByPostId(
+          post.id,
+          userId,
+        );
+        post.extendedLikesInfo.likesCount = likesCount
+        await this.postsRepository.savePost(post)
+        return likesCount;
+      }),
+    );
+    const dislikes = await Promise.all(
+      posts.map(async (post) => {
+        const likesCount = await this.likesRepository.getLikesByPostId(
+          post.id,
+          userId,
+        );
+        post.extendedLikesInfo.dislikesCount = likesCount
+        await this.postsRepository.savePost(post)
+        return likesCount;
+      }),
+    );
+    return console.log('likesCount: ', likes, dislikes);
+    // const likesCount = await this
   }
-
-  async reCalculateLikesInfoForComments(bearerHeader: string, commentId: string) {
-    // const token = this.tokensService.getToken(bearerHeader);
-    // const decodedToken: any = this.tokensService.validateAccessToken(token);
-    // const user = await this.usersRepository.findUserById(decodedToken?._id);
-    // const findedComment = await this.commentsRepository.findCommentById(commentId);
-    // return {
-    //   findedComment,
-    //   user,
-    // };
-    
-  }
-
-
-
 }

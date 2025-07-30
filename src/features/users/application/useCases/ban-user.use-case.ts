@@ -1,7 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UsersRepositoryTO } from '../../infrastructure/users.repository.to';
 import { BanUserDto } from '../../api/models/input/ban-user.dto';
-import { CommentsRepositoryTO } from '../../../comments/infrastructure/comments.repository.to';
+import { LikesRepository } from '../../../likes/infrastructure/likes.repository';
+import { LikesService } from '../../../likes/application/likes.service';
 
 export class BanUserCommand {
   constructor(
@@ -14,7 +15,8 @@ export class BanUserCommand {
 export class BanUserUseCase implements ICommandHandler<BanUserCommand> {
   constructor(
     private readonly usersRepository: UsersRepositoryTO,
-    private readonly commentsRepository: CommentsRepositoryTO,
+    private readonly likesRepository: LikesRepository,
+    private readonly likesService: LikesService
   ) {}
 
   async execute(command: BanUserCommand) {
@@ -32,6 +34,9 @@ export class BanUserUseCase implements ICommandHandler<BanUserCommand> {
       banReason,
     };
     findedUser.banUser(findedUser, banUserData);
+    // const likes = await this.likesRepository.getLikesByPostId(findedUser.id);
+    // console.log('likes: ', likes);
+    const posts = await this.likesService.reCalculateLikesInfoForUserWithPosts(findedUser.id)
     // await Promise.all(findedUser.comments.map(item => console.log(item.id)));
     // await this.commentsRepository.deleteComment('12')
     // await Promise.all(

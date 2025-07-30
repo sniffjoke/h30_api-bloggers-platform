@@ -65,4 +65,14 @@ export class PostsRepositoryTO {
         return deletePost;
     }
 
+    async getAllPosts() {
+        return await this.pRepository.find(
+          {relations: ['extendedLikesInfo']},
+        );
+    }
+
+    async savePost(post: PostEntity) {
+        return await this.pRepository.save(post);
+    }
+
 }
