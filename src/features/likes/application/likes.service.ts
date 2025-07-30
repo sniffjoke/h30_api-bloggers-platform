@@ -24,7 +24,7 @@ export class LikesService {
     );
     const dislikes = await Promise.all(
       posts.map(async (post) => {
-        const likesCount = await this.likesRepository.getLikesByPostId(
+        const likesCount = await this.likesRepository.getDislikesByPostId(
           post.id,
           userId,
         );
