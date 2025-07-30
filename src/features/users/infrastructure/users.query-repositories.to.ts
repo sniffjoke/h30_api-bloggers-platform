@@ -58,7 +58,7 @@ export class UsersQueryRepositoryTO {
       .leftJoinAndSelect('u.banInfo', 'b')
       .where('LOWER(u.email) LIKE LOWER(:email)', { email: `%${generateQuery.searchEmailTerm}%` })
       .orWhere('LOWER(u.login) LIKE LOWER(:login)', { login: `%${generateQuery.searchLoginTerm}%` })
-      .orderBy(`"${generateQuery.sortBy}"`, generateQuery.sortDirection.toUpperCase())
+      .orderBy(`u.${generateQuery.sortBy}`, generateQuery.sortDirection.toUpperCase())
       .skip((generateQuery.page - 1) * generateQuery.pageSize)
       .take(generateQuery.pageSize);
     if (generateQuery.banStatus === BanStatusDto.Banned) {
