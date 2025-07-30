@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Or, Repository } from 'typeorm';
 import { PaginationBaseModel } from '../../../core/base/pagination.base.model';
 import { UserEntity } from '../domain/user.entity';
+import { BanStatusDto } from '../api/models/input/ban-user.dto';
 
 
 @Injectable()
@@ -39,20 +40,34 @@ export class UsersQueryRepositoryTO {
 
   async getAllUsersWithQuery(query: any) {
     const generateQuery = await this.generateQuery(query);
-    const items = await this.uRepository
-      .find({
-        where: [
-          { email: Or(ILike(`${generateQuery.searchEmailTerm}`)) },
-          { login: Or(ILike(`${generateQuery.searchLoginTerm}`)) },
-        ],
-        relations: ['banInfo'],
-        order: {
-          [generateQuery.sortBy]: generateQuery.sortDirection,
-        },
-        take: generateQuery.pageSize,
-        skip: (generateQuery.page - 1) * generateQuery.pageSize,
-      });
-    const itemsOutput = items.map((item: any) => this.userMap(item));
+    // const items = await this.uRepository
+    //   .find({
+    //     where: [
+    //       { email: Or(ILike(`${generateQuery.searchEmailTerm}`)) },
+    //       { login: Or(ILike(`${generateQuery.searchLoginTerm}`)) },
+    //     ],
+    //     relations: ['banInfo'],
+    //     order: {
+    //       [generateQuery.sortBy]: generateQuery.sortDirection,
+    //     },
+    //     take: generateQuery.pageSize,
+    //     skip: (generateQuery.page - 1) * generateQuery.pageSize,
+    //   });
+    const items = this.uRepository
+      .createQueryBuilder('u')
+      .leftJoinAndSelect('u.banInfo', 'b')
+      .where('LOWER(u.email) LIKE LOWER(:email)', { email: `%${generateQuery.searchEmailTerm}%` })
+      .orWhere('LOWER(u.login) LIKE LOWER(:login)', { login: `%${generateQuery.searchLoginTerm}%` })
+      .orderBy(`"${generateQuery.sortBy}"`, generateQuery.sortDirection.toUpperCase())
+      .skip((generateQuery.page - 1) * generateQuery.pageSize)
+      .take(generateQuery.pageSize);
+    if (generateQuery.banStatus === BanStatusDto.Banned) {
+      items.andWhere('b.isBanned = :status', { status: true });
+    } else if (generateQuery.banStatus === BanStatusDto.NotBanned) {
+      items.andWhere('b.isBanned = :status', { status: false });
+    }
+    const itemsWithQuery = await items.getMany()
+    const itemsOutput = itemsWithQuery.map((item: any) => this.userMap(item));
     const resultPosts = new PaginationBaseModel(generateQuery, itemsOutput);
     return resultPosts;
   }
@@ -79,6 +94,7 @@ export class UsersQueryRepositoryTO {
       sortDirection: query.sortDirection ? query.sortDirection : 'desc',
       searchLoginTerm: `%` + searchLoginTerm + '%',
       searchEmailTerm: '%' + searchEmailTerm + '%',
+      banStatus: query.banStatus ? query.banStatus : BanStatusDto.All,
     };
   }
 

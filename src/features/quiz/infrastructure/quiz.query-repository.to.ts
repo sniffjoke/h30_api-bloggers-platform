@@ -35,9 +35,9 @@ export class QuizQueryRepositoryTO {
     const items = this.questionRepository
       .createQueryBuilder('q')
       .where('LOWER(q.body) LIKE LOWER(:name)', { name: `%${generateQuery.bodySearchTerm.toLowerCase()}%` })
-      .orderBy(`"${generateQuery.sortBy}"`, generateQuery.sortDirection.toUpperCase())
-      .skip((generateQuery.page - 1) * generateQuery.pageSize)
-      .take(generateQuery.pageSize);
+        .orderBy(`"${generateQuery.sortBy}"`, generateQuery.sortDirection.toUpperCase())
+        .skip((generateQuery.page - 1) * generateQuery.pageSize)
+        .take(generateQuery.pageSize);
     if (generateQuery.publishedStatus === PublishedStatuses.PUBLISHED) {
       items.andWhere('q.published = :status', { status: true });
     } else if (generateQuery.publishedStatus === PublishedStatuses.NOTPUBLISHED) {
@@ -127,8 +127,8 @@ export class QuizQueryRepositoryTO {
       .leftJoinAndSelect('s.user', 'user-second')
       .leftJoinAndSelect('f.answers', 'answers-first')
       .leftJoinAndSelect('s.answers', 'answers-second')
-      .where('f.userId = :userId', { userId: user.id })
-      .orWhere('s.userId = :userId', { userId: user.id })
+          .where('f.userId = :userId', { userId: user.id })
+          .orWhere('s.userId = :userId', { userId: user.id })
       .orderBy(`g.${generateQuery.sortBy}`, generateQuery.sortDirection.toUpperCase())
       .addOrderBy('g.pairCreatedDate', 'DESC')
       .skip((generateQuery.page - 1) * generateQuery.pageSize)

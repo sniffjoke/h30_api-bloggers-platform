@@ -18,3 +18,9 @@ export class BanUserDto {
 export class BanInfoDto extends BanUserDto {
   banDate: string | null;
 }
+
+export enum BanStatusDto {
+  Banned = 'Banned',
+  All = 'All',
+  NotBanned = 'NotBanned',
+}
