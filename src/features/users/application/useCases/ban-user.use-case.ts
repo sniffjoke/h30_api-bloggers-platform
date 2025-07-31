@@ -16,7 +16,7 @@ export class BanUserUseCase implements ICommandHandler<BanUserCommand> {
   constructor(
     private readonly usersRepository: UsersRepositoryTO,
     private readonly likesRepository: LikesRepository,
-    private readonly likesService: LikesService
+    private readonly likesService: LikesService,
   ) {}
 
   async execute(command: BanUserCommand) {
@@ -36,8 +36,10 @@ export class BanUserUseCase implements ICommandHandler<BanUserCommand> {
     findedUser.banUser(findedUser, banUserData);
     // const likes = await this.likesRepository.getLikesByPostId(findedUser.id);
     // console.log('likes: ', likes);
-    await this.likesRepository.hydeAllLikesForCurrentUser(findedUser.id);
-    const posts = await this.likesService.reCalculateLikesInfoForUserWithPosts(findedUser.id)
+    command.banUserModel.isBanned
+      ? await this.likesRepository.hydeAllLikesForCurrentUser(findedUser.id)
+      : await this.likesRepository.showAllLikesForCurrentUser(findedUser.id);
+    await this.likesService.reCalculateLikesInfoForUserWithPosts(findedUser.id);
     // await Promise.all(findedUser.comments.map(item => console.log(item.id)));
     // await this.commentsRepository.deleteComment('12')
     // await Promise.all(

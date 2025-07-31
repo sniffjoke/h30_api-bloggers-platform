@@ -3,14 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LikeEntity } from '../domain/likes.entity';
 
-
 @Injectable()
 export class LikesRepository {
-
   constructor(
-    @InjectRepository(LikeEntity) private readonly lRepository: Repository<LikeEntity>,
-  ) {
-  }
+    @InjectRepository(LikeEntity)
+    private readonly lRepository: Repository<LikeEntity>,
+  ) {}
 
   async getLikesByPostId(postId: string, userId: string) {
     const likesCount = await this.lRepository
@@ -36,15 +34,27 @@ export class LikesRepository {
 
   async hydeAllLikesForCurrentUser(userId: string) {
     const likes = await this.lRepository.find({
-      where: {userId},
-    })
-    await Promise.all(likes.map(async (like) => {
-      like.hyde = true
-      return this.lRepository.save(like);
-    }))
-
+      where: { userId },
+    });
+    await Promise.all(
+      likes.map(async (like) => {
+        like.hyde = true;
+        return this.lRepository.save(like);
+      }),
+    );
     return likes;
-
   }
 
+  async showAllLikesForCurrentUser(userId: string) {
+    const likes = await this.lRepository.find({
+      where: { userId },
+    });
+    await Promise.all(
+      likes.map(async (like) => {
+        like.hyde = false;
+        return this.lRepository.save(like);
+      }),
+    );
+    return likes;
+  }
 }

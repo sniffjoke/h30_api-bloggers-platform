@@ -55,20 +55,20 @@ export class PostsService {
       `
             SELECT *
             FROM likes
-            WHERE "postId" = $1 AND "userId" = $2  
+            WHERE "postId" = $1 AND "userId" = $2 AND "hyde" = $3
       `,
-      [post.id, user?.id],
+      [post.id, user?.id, false],
     );
     const likeDetails = await this.dataSource.query(
       `
                     SELECT *
                     FROM likes
-                    WHERE "postId" = $1 AND "status" = $2
+                    WHERE "postId" = $1 AND "status" = $2 AND "hyde" = $3
                     ORDER BY "addedAt" DESC
                     LIMIT 3
                               
           `,
-      [post.id, LikeStatus.Like],
+      [post.id, LikeStatus.Like, false],
     );
     const likeDetailsMap = await Promise.all(
       likeDetails.map(async (like: any) => {
