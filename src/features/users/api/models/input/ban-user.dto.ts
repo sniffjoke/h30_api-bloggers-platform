@@ -20,7 +20,7 @@ export class BanInfoDto extends BanUserDto {
 }
 
 export enum BanStatusDto {
-  Banned = 'Banned',
-  All = 'All',
-  NotBanned = 'NotBanned',
+  Banned = 'banned',
+  All = 'all',
+  NotBanned = 'notBanned',
 }

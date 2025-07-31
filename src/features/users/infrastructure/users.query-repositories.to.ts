@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Or, Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { PaginationBaseModel } from '../../../core/base/pagination.base.model';
 import { UserEntity } from '../domain/user.entity';
 import { BanStatusDto } from '../api/models/input/ban-user.dto';
@@ -53,11 +53,16 @@ export class UsersQueryRepositoryTO {
     //     take: generateQuery.pageSize,
     //     skip: (generateQuery.page - 1) * generateQuery.pageSize,
     //   });
+    console.log(generateQuery.banStatus);
     const items = this.uRepository
       .createQueryBuilder('u')
       .leftJoinAndSelect('u.banInfo', 'b')
-      .where('LOWER(u.email) LIKE LOWER(:email)', { email: `%${generateQuery.searchEmailTerm}%` })
-      .orWhere('LOWER(u.login) LIKE LOWER(:login)', { login: `%${generateQuery.searchLoginTerm}%` })
+      // .where('LOWER(u.email) LIKE LOWER(:email)', { email: `%${generateQuery.searchEmailTerm}%` })
+      // .orWhere('LOWER(u.login) LIKE LOWER(:login)', { login: `%${generateQuery.searchLoginTerm}%` })
+      .where(new Brackets(qb => {
+        qb.where('LOWER(u.email) LIKE LOWER(:email)', { email: `%${generateQuery.searchEmailTerm}%` })
+          .orWhere('LOWER(u.login) LIKE LOWER(:login)', { login: `%${generateQuery.searchLoginTerm}%` });
+      }))
       .orderBy(`u.${generateQuery.sortBy}`, generateQuery.sortDirection.toUpperCase())
       .skip((generateQuery.page - 1) * generateQuery.pageSize)
       .take(generateQuery.pageSize);
@@ -75,14 +80,29 @@ export class UsersQueryRepositoryTO {
   private async generateQuery(query: any) {
     const searchLoginTerm = query.searchLoginTerm ? query.searchLoginTerm : '';
     const searchEmailTerm = query.searchEmailTerm ? query.searchEmailTerm : '';
-    const totalCount = await this.uRepository.count(
-      {
-        where: [
-          { email: Or(ILike(`%${searchEmailTerm}%`)) },
-          { login: Or(ILike(`%${searchLoginTerm}%`)) },
-        ],
-      },
-    );
+    // const totalCount = await this.uRepository.count(
+    //   {
+    //     where: [
+    //       { email: Or(ILike(`%${searchEmailTerm}%`)) },
+    //       { login: Or(ILike(`%${searchLoginTerm}%`)) },
+    //     ],
+    //   },
+    // );
+    const items = this.uRepository
+      .createQueryBuilder('u')
+      .leftJoinAndSelect('u.banInfo', 'b')
+      // .where('LOWER(u.email) LIKE LOWER(:email)', { email: `%${generateQuery.searchEmailTerm}%` })
+      // .orWhere('LOWER(u.login) LIKE LOWER(:login)', { login: `%${generateQuery.searchLoginTerm}%` })
+      .where(new Brackets(qb => {
+        qb.where('LOWER(u.email) LIKE LOWER(:email)', { email: `%${searchEmailTerm}%` })
+          .orWhere('LOWER(u.login) LIKE LOWER(:login)', { login: `%${searchLoginTerm}%` });
+      }))
+    if (query.banStatus === BanStatusDto.Banned) {
+      items.andWhere('b.isBanned = :status', { status: true });
+    } else if (query.banStatus === BanStatusDto.NotBanned) {
+      items.andWhere('b.isBanned = :status', { status: false });
+    }
+    const totalCount = await items.getCount()
     const pageSize = query.pageSize ? +query.pageSize : 10;
     const pagesCount = Math.ceil(Number(totalCount) / pageSize);
     return {

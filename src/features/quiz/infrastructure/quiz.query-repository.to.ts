@@ -85,7 +85,7 @@ export class QuizQueryRepositoryTO {
     } else if (query.publishedStatus === PublishedStatuses.NOTPUBLISHED) {
       totalCount.andWhere('q.published = :status', { status: false });
     }
-    const totalCountWithQuery = await totalCount.getCount();
+    const totalCountWithQuery = await totalCount. getCount();
     const pageSize = query.pageSize ? +query.pageSize : 10;
     const pagesCount = Math.ceil(totalCountWithQuery / pageSize);
 
