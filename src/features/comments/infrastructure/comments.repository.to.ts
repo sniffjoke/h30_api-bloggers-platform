@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CommentCreateModel } from '../api/models/input/create-comment.input.model';
 import { CommentEntity } from '../domain/comment.entity';
 import { LikesInfoEntity } from '../domain/likes-info.entity';
+import { PostEntity } from '../../posts/domain/posts.entity';
 
 
 @Injectable()
@@ -65,6 +66,16 @@ export class CommentsRepositoryTO {
       {userId}
     );
     return deleteComment;
+  }
+
+  async getAllComments() {
+    return await this.cRepository.find(
+      {relations: ['likesInfo']},
+    );
+  }
+
+  async saveComment(comment: CommentEntity) {
+    return await this.cRepository.save(comment);
   }
 
 }

@@ -32,6 +32,28 @@ export class LikesRepository {
     return dislikesCount;
   }
 
+  async getLikesByCommentId(commentId: string, userId: string) {
+    const likesCount = await this.lRepository
+      .createQueryBuilder('l')
+      .where('l.status = :status', { status: 'Like' })
+      .andWhere('l.hyde = :hyde', { hyde: false })
+      .andWhere('l.userId = :userId', { userId: userId })
+      .andWhere('l.commentId = :commentId', { commentId: commentId })
+      .getCount();
+    return likesCount;
+  }
+
+  async getDislikesByCommentId(commentId: string, userId: string) {
+    const dislikesCount = await this.lRepository
+      .createQueryBuilder('l')
+      .where('l.status = :status', { status: 'Dislike' })
+      .andWhere('l.hyde = :hyde', { hyde: false })
+      .andWhere('l.userId = :userId', { userId: userId })
+      .andWhere('l.commentId = :commentId', { commentId: commentId })
+      .getCount();
+    return dislikesCount;
+  }
+
   async hydeAllLikesForCurrentUser(userId: string) {
     const likes = await this.lRepository.find({
       where: { userId },
