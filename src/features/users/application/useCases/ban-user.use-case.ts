@@ -40,6 +40,7 @@ export class BanUserUseCase implements ICommandHandler<BanUserCommand> {
       ? await this.likesRepository.hydeAllLikesForCurrentUser(findedUser.id)
       : await this.likesRepository.showAllLikesForCurrentUser(findedUser.id);
     await this.likesService.reCalculateLikesInfoForUserWithPosts(findedUser.id);
+    await this.likesService.reCalculateLikesInfoForUserWithComments(findedUser.id);
     // await Promise.all(findedUser.comments.map(item => console.log(item.id)));
     // await this.commentsRepository.deleteComment('12')
     // await Promise.all(
